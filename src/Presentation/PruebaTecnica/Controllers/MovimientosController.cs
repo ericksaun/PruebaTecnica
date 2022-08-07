@@ -66,9 +66,21 @@ namespace PruebaTecnica.Controller
         [HttpGet]
         public IActionResult Reporte([FromQuery]int IdUser, [FromQuery] DateTime fecha_movimientos_inicial, [FromQuery] DateTime fecha_movimientos_final)
         {
-            IEnumerable<Movimientos> reporte = _movementsServices.GetMovementsbyUserAndRangeOfDate(IdUser, fecha_movimientos_inicial, fecha_movimientos_final);
-            IEnumerable<VmReporteMovimientos> movimientosReporte =_mapper.Map<IEnumerable<VmReporteMovimientos>>(reporte);
-            return Ok(movimientosReporte);
+            try
+            {
+                _logging.RegisterLog(TipoLoggeo.Debug, $"Inicia Reporte", $"{DebugKey}{NameClass}");
+                IEnumerable<Movimientos> reporte = _movementsServices.GetMovementsbyUserAndRangeOfDate(IdUser, fecha_movimientos_inicial, fecha_movimientos_final);
+                _logging.RegisterLog(TipoLoggeo.Debug, $"Obtine Movimientos", $"{DebugKey}{NameClass}");
+                IEnumerable<VmReporteMovimientos> movimientosReporte = _mapper.Map<IEnumerable<VmReporteMovimientos>>(reporte);
+                _logging.RegisterLog(TipoLoggeo.Debug, $"Mapper Movimientos => VmReporteMovimientos", $"{DebugKey}{NameClass}");
+
+                return Ok(movimientosReporte);
+            }
+            catch(Exception ex)
+            {
+                _logging.RegisterLog<IMovementsServices>(TipoLoggeo.Error, $"{MsgError} {MethodBase.GetCurrentMethod().Name}", $"{ErrorKey}{NameClass}", _movementsServices, ex);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
