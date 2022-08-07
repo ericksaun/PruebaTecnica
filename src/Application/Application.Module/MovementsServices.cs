@@ -41,7 +41,7 @@ namespace Application.Module
                     case TipoTransaccion.Debito:
                         {
                             double cupoDiario = _unitOfWork.movimientos.GetDailyQuota(movimiento.cuenta.cliente.Id);
-                            if (Math.Abs(cupoDiario) < Convert.ToDouble(_cupoDiario) && Math.Abs(cupoDiario)<movimiento.mo_valor)
+                            if (Math.Abs(cupoDiario) < Convert.ToDouble(_cupoDiario) && Math.Abs(cupoDiario)+movimiento.mo_valor< Convert.ToDouble(_cupoDiario))
                             {
                                 
                                 movimiento = GetLastMovimiento(movimiento);
