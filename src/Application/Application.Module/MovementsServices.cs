@@ -12,7 +12,7 @@ namespace Application.Module
 {
     public class MovementsServices : IMovementsServices
     {
-        private const string msgExceptionTipoTransaccion = "No existe el tipo de transaccion indicada";
+        private const string msgExceptionTipoTransaccion = "No existe el tipo de transaccion indicadapor favor usar Debito o Credito";
         private const string msgExceptionCupoExcedido = "Cupo diario Excedido";
         private const string msgExceptionSaldoExcedido = "Saldo no disponible";
         
@@ -41,7 +41,7 @@ namespace Application.Module
                     case TipoTransaccion.Debito:
                         {
                             double cupoDiario = _unitOfWork.movimientos.GetDailyQuota(movimiento.cuenta.cliente.Id);
-                            if (Math.Abs(cupoDiario) < Convert.ToDouble(_cupoDiario) && Math.Abs(cupoDiario)+movimiento.mo_valor< Convert.ToDouble(_cupoDiario))
+                            if (Math.Abs(cupoDiario) <= Convert.ToDouble(_cupoDiario) && Math.Abs(cupoDiario)+movimiento.mo_valor<= Convert.ToDouble(_cupoDiario))
                             {
                                 
                                 movimiento = GetLastMovimiento(movimiento);
